@@ -128,46 +128,99 @@ class GradingSystemGUI:
         self.marking_status.pack(pady=5)
         
     def create_grading_tab(self):
-        """Tab for grading marked sheets"""
+        """Tab for grading marked sheets with radio buttons for expected answers"""
         self.grading_frame = ttk.Frame(self.notebook)
         self.notebook.add(self.grading_frame, text="3. Grade Sheet")
         
         ttk.Label(self.grading_frame, text="Grade Answer Sheet", 
                  font=('Arial', 14, 'bold')).pack(pady=10)
         
+        # Main grading area
+        grading_container = ttk.Frame(self.grading_frame)
+        grading_container.pack(fill='both', expand=True, padx=10, pady=10)
+        
+        # Left side - File selection and settings
+        left_frame = ttk.Frame(grading_container)
+        left_frame.pack(side='left', fill='both', expand=True, padx=(0, 10))
+        
         # File selection
-        file_frame = ttk.Frame(self.grading_frame)
-        file_frame.pack(pady=10, fill='x', padx=20)
+        file_frame = ttk.Frame(left_frame)
+        file_frame.pack(pady=10, fill='x')
         
         ttk.Label(file_frame, text="Marked Sheet:").pack(side='left')
         self.marked_file_var = tk.StringVar(value="./templates/marked_demo.png")
-        ttk.Entry(file_frame, textvariable=self.marked_file_var, width=40).pack(side='left', padx=5)
+        ttk.Entry(file_frame, textvariable=self.marked_file_var, width=30).pack(side='left', padx=5)
         ttk.Button(file_frame, text="Browse", command=self.browse_marked_file).pack(side='left', padx=5)
         
-        # Expected answers
-        answers_frame = ttk.Frame(self.grading_frame)
-        answers_frame.pack(pady=10, fill='x', padx=20)
-        
-        ttk.Label(answers_frame, text="Expected Answers:").pack(side='left')
-        self.answers_var = tk.StringVar(value="A,B,D,E,E,E,D,B,A,A,C,C,C,D,E,A,E,B,A,E,B,B,C,B,E")
-        ttk.Entry(answers_frame, textvariable=self.answers_var, width=50).pack(side='left', padx=5)
-        
         # Threshold
-        threshold_frame = ttk.Frame(self.grading_frame)
-        threshold_frame.pack(pady=10, fill='x', padx=20)
+        threshold_frame = ttk.Frame(left_frame)
+        threshold_frame.pack(pady=10, fill='x')
         
         ttk.Label(threshold_frame, text="Detection Threshold:").pack(side='left')
         self.threshold_var = tk.StringVar(value="0.2")
         ttk.Entry(threshold_frame, textvariable=self.threshold_var, width=10).pack(side='left', padx=5)
         ttk.Label(threshold_frame, text="(0.1-0.4, lower = more sensitive)").pack(side='left')
         
+        # Expected answers section
+        ttk.Label(left_frame, text="Expected Answers:", 
+                 font=('Arial', 12, 'bold')).pack(pady=(20, 5), anchor='w')
+        
+        # Text entry for quick input (alternative to radio buttons)
+        text_frame = ttk.Frame(left_frame)
+        text_frame.pack(pady=5, fill='x')
+        
+        ttk.Label(text_frame, text="Quick Input:").pack(side='left')
+        self.answers_var = tk.StringVar(value="A,B,D,E,E,E,D,B,A,A,C,C,C,D,E,A,E,B,A,E,B,B,C,B,E")
+        ttk.Entry(text_frame, textvariable=self.answers_var, width=40).pack(side='left', padx=5)
+        ttk.Button(text_frame, text="Apply", command=self.apply_text_answers).pack(side='left', padx=5)
+        
         # Grade button
-        ttk.Button(self.grading_frame, text="Grade Sheet", 
+        ttk.Button(left_frame, text="Grade Sheet", 
                   command=self.grade_sheet).pack(pady=20)
         
         # Status
-        self.grading_status = ttk.Label(self.grading_frame, text="Ready to grade")
+        self.grading_status = ttk.Label(left_frame, text="Ready to grade")
         self.grading_status.pack(pady=5)
+        
+        # Right side - Expected answers with radio buttons
+        right_frame = ttk.Frame(grading_container)
+        right_frame.pack(side='right', fill='both', expand=True)
+        
+        ttk.Label(right_frame, text="Set Expected Answers", 
+                 font=('Arial', 12, 'bold')).pack(pady=5)
+        
+        # Scrollable frame for expected answers
+        canvas = tk.Canvas(right_frame)
+        scrollbar = ttk.Scrollbar(right_frame, orient="vertical", command=canvas.yview)
+        self.expected_answers_frame = ttk.Frame(canvas)
+        
+        self.expected_answers_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        
+        canvas.create_window((0, 0), window=self.expected_answers_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        
+        # Expected answers radio buttons will be created here dynamically
+        self.expected_answer_vars = []
+        
+        # Control buttons for expected answers
+        expected_controls = ttk.Frame(right_frame)
+        expected_controls.pack(fill='x', pady=5)
+        
+        ttk.Button(expected_controls, text="Load Template", 
+                  command=self.load_template_for_grading).pack(side='left', padx=2)
+        ttk.Button(expected_controls, text="Set All A", 
+                  command=lambda: self.set_all_expected_answers("A")).pack(side='left', padx=2)
+        ttk.Button(expected_controls, text="Set All B", 
+                  command=lambda: self.set_all_expected_answers("B")).pack(side='left', padx=2)
+        ttk.Button(expected_controls, text="Clear All", 
+                  command=self.clear_all_expected_answers).pack(side='left', padx=2)
+        
+        # Pack canvas and scrollbar
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
         
     def create_results_tab(self):
         """Tab for displaying results with images"""
@@ -382,6 +435,105 @@ class GradingSystemGUI:
         )
         if filename:
             self.marked_file_var.set(filename)
+    
+    def load_template_for_grading(self):
+        """Load template and create radio buttons for expected answers"""
+        try:
+            position_file = "./templates/gabarito_demo_positions.json"
+            
+            if not os.path.exists(position_file):
+                messagebox.showerror("Error", "Template not found. Please generate a template first.")
+                return
+            
+            # Load position data
+            with open(position_file, 'r') as f:
+                self.grading_position_data = json.load(f)
+            
+            # Clear existing radio buttons
+            for widget in self.expected_answers_frame.winfo_children():
+                widget.destroy()
+            self.expected_answer_vars = []
+            
+            # Create radio buttons for each question
+            ttk.Label(self.expected_answers_frame, text="Question", font=('Arial', 10, 'bold')).grid(row=0, column=0, padx=5, pady=2)
+            
+            # Create choice headers
+            choices = self.grading_position_data.get('choices', ['A', 'B', 'C', 'D', 'E'])
+            for i, choice in enumerate(choices):
+                ttk.Label(self.expected_answers_frame, text=choice, font=('Arial', 10, 'bold')).grid(row=0, column=i+1, padx=5, pady=2)
+            
+            # Create radio buttons for each question
+            for q_data in self.grading_position_data['bubble_positions']:
+                q_num = q_data['question']
+                row = q_num
+                
+                ttk.Label(self.expected_answers_frame, text=f"Q{q_num:02d}").grid(row=row, column=0, padx=5, pady=2, sticky='w')
+                
+                # Create variable for this question
+                var = tk.StringVar(value="")  # Start with no selection
+                self.expected_answer_vars.append((q_num, var))
+                
+                # Create radio buttons for each choice
+                for i, choice in enumerate(choices):
+                    rb = ttk.Radiobutton(
+                        self.expected_answers_frame, 
+                        text="", 
+                        variable=var, 
+                        value=choice,
+                        command=lambda q=q_num, c=choice: self.on_expected_answer_selected(q, c)
+                    )
+                    rb.grid(row=row, column=i+1, padx=5, pady=2)
+            
+            # Load current answers from text field if available
+            self.apply_text_answers()
+            
+            self.grading_status.config(text="Template loaded. Set expected answers using radio buttons.")
+            
+        except Exception as e:
+            self.grading_status.config(text="Error loading template")
+            messagebox.showerror("Error", f"Failed to load template: {str(e)}")
+    
+    def on_expected_answer_selected(self, question, choice):
+        """Called when an expected answer is selected"""
+        self.grading_status.config(text=f"Q{question}: {choice} set as expected answer")
+        self.update_answers_text_field()
+    
+    def update_answers_text_field(self):
+        """Update the text field with current radio button selections"""
+        answers = []
+        for q_num, var in self.expected_answer_vars:
+            answer = var.get()
+            answers.append(answer if answer else "A")  # Default to "A" if not set
+        
+        self.answers_var.set(','.join(answers))
+    
+    def apply_text_answers(self):
+        """Apply answers from text field to radio buttons"""
+        if not hasattr(self, 'expected_answer_vars') or not self.expected_answer_vars:
+            return
+            
+        answers_text = self.answers_var.get()
+        if answers_text:
+            answers = answers_text.split(',')
+            for i, (q_num, var) in enumerate(self.expected_answer_vars):
+                if i < len(answers):
+                    var.set(answers[i].strip())
+    
+    def set_all_expected_answers(self, choice):
+        """Set all expected answers to a specific choice"""
+        if hasattr(self, 'expected_answer_vars'):
+            for q_num, var in self.expected_answer_vars:
+                var.set(choice)
+            self.update_answers_text_field()
+            self.grading_status.config(text=f"All expected answers set to {choice}")
+    
+    def clear_all_expected_answers(self):
+        """Clear all expected answers"""
+        if hasattr(self, 'expected_answer_vars'):
+            for q_num, var in self.expected_answer_vars:
+                var.set("")
+            self.update_answers_text_field()
+            self.grading_status.config(text="All expected answers cleared")
     
     def grade_sheet(self):
         """Grade the marked answer sheet"""
