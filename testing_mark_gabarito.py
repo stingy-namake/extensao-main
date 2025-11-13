@@ -2,6 +2,36 @@ import json
 from PIL import Image, ImageDraw
 import os
 
+def create_marked_sheet_from_answers(answers, template_path, position_data, output_path):
+    """
+    Create a marked sheet from a dictionary of answers
+    """
+    try:
+        img = Image.open(template_path)
+        draw = ImageDraw.Draw(img)
+        
+        marked_count = 0
+        for q_data in position_data['bubble_positions']:
+            q_num = q_data['question']
+            if q_num in answers and answers[q_num]:
+                answer = answers[q_num]
+                for bubble in q_data['bubbles']:
+                    if bubble['choice'] == answer:
+                        cx, cy = bubble['center']
+                        # Fill the bubble
+                        draw.ellipse([cx-8, cy-8, cx+8, cy+8], fill="black")
+                        marked_count += 1
+                        break
+        
+        img.save(output_path)
+        print(f"Created marked sheet: {output_path}")
+        print(f"Marked {marked_count} questions")
+        
+        return output_path
+        
+    except Exception as e:
+        raise Exception(f"Error creating marked sheet: {e}")
+
 def create_marked_demo_sheet():
     """
     Create a marked answer sheet by asking for each question's answer
@@ -9,6 +39,9 @@ def create_marked_demo_sheet():
     print("=== Answer Sheet Marker ===")
     print("This will create a marked answer sheet for grading demonstration.")
     print()
+    
+    template_name = "./templates/gabarito_demo.png"
+    position_file = "./templates/gabarito_demo_positions.json"
     
     try:
         num_questions = int(input("Enter number of questions (default 20): ") or "20")
@@ -18,12 +51,12 @@ def create_marked_demo_sheet():
     
     if not os.path.exists(template_name):
         print(f"\nError: Template file '{template_name}' not found!")
-        print("Please run main.py first to generate the template.")
+        print("Please generate the template first.")
         return None
     
     if not os.path.exists(position_file):
         print(f"\nError: Position file '{position_file}' not found!")
-        print("Please run main.py first to generate the template.")
+        print("Please generate the template first.")
         return None
     
     try:
@@ -51,34 +84,10 @@ def create_marked_demo_sheet():
                 print("Invalid answer! Please enter A, B, C, D, E or leave blank.")
     
     try:
-        img = Image.open(template_name)
-        draw = ImageDraw.Draw(img)
-        
-        marked_count = 0
-        for q_data in position_data['bubble_positions']:
-            q_num = q_data['question']
-            if q_num <= num_questions and user_answers.get(q_num):
-                answer = user_answers[q_num]
-                for bubble in q_data['bubbles']:
-                    if bubble['choice'] == answer:
-                        cx, cy = bubble['center']
-                        # Fill the bubble
-                        draw.ellipse([cx-8, cy-8, cx+8, cy+8], fill="black")
-                        marked_count += 1
-                        break
-        
-        # Save marked sheet
         output_name = "my_marked_sheet.png"
-        img.save(output_name)
+        create_marked_sheet_from_answers(user_answers, template_name, position_data, output_name)
         
         print(f"\nSuccessfully created marked sheet: {output_name}")
-        print(f"Marked {marked_count} out of {num_questions} questions")
-        
-        print(f"\n=== YOUR ANSWERS ===")
-        for q in range(1, num_questions + 1):
-            answer = user_answers.get(q)
-            status = answer if answer else "UNANSWERED"
-            print(f"Q{q:02d}: {status}")
         
         return output_name, user_answers
         
@@ -92,6 +101,9 @@ def quick_demo():
     """
     print("=== Quick Demo Mode ===")
     
+    template_name = "./templates/gabarito_demo.png"
+    position_file = "./templates/gabarito_demo_positions.json"
+    
     # Predefined answers for a quick test
     demo_answers = {
         1: "A", 2: "B", 3: "C", 4: "D", 5: "E",
@@ -101,28 +113,16 @@ def quick_demo():
     }
     
     if not os.path.exists(template_name) or not os.path.exists(position_file):
-        print("Please run main.py first to generate the template!")
+        print("Please generate the template first!")
         return None
     
     try:
         with open(position_file, 'r') as f:
             position_data = json.load(f)
         
-        img = Image.open(template_name)
-        draw = ImageDraw.Draw(img)
-        
-        for q_data in position_data['bubble_positions']:
-            q_num = q_data['question']
-            if q_num in demo_answers:
-                answer = demo_answers[q_num]
-                for bubble in q_data['bubbles']:
-                    if bubble['choice'] == answer:
-                        cx, cy = bubble['center']
-                        draw.ellipse([cx-8, cy-8, cx+8, cy+8], fill="black")
-                        break
-        
         output_name = "./templates/marked_demo.png"
-        img.save(output_name)
+        create_marked_sheet_from_answers(demo_answers, template_name, position_data, output_name)
+        
         print(f"Created quick demo: {output_name}")
         return output_name, demo_answers
         
@@ -131,28 +131,5 @@ def quick_demo():
         return None
 
 if __name__ == "__main__":
-
-    template_name = "./templates/gabarito_demo.png"
-    position_file = "./templates/gabarito_demo_positions.json"
-
-    print("Choose mode:")
-    print("1. Interactive - Enter your own answers")
-    print("2. Quick Demo - Use predefined answers")
-    
-    choice = input("Enter choice (1 or 2, default 1): ").strip()
-    
-    if choice == "2":
-        result = quick_demo()
-    else:
-        result = create_marked_demo_sheet()
-    
-    if result:
-        marked_file, answers = result
-        print(f"\nYou can now grade this sheet by running:")
-        print(f"   python grade_it.py")
-        print(f"\nOr manually grade it with:")
-        print(f"   from grade_it import grade_gabarito_improved, print_grade_report")
-        print(f"   results = grade_gabarito_improved('{marked_file}', expected_answers, position_data)")
-        print(f"   print_grade_report(results)")
-    else:
-        print("\nFailed to create marked sheet.")
+    print("This module is primarily for use with the GUI.")
+    print("For command line use, run the individual scripts.")
