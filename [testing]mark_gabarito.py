@@ -16,9 +16,6 @@ def create_marked_demo_sheet():
         num_questions = 20
         print(f"Using default: {num_questions} questions")
     
-    template_name = "demonstration_gabarito.png"
-    position_file = "demonstration_gabarito_positions.json"
-    
     if not os.path.exists(template_name):
         print(f"\nError: Template file '{template_name}' not found!")
         print("Please run main.py first to generate the template.")
@@ -103,9 +100,6 @@ def quick_demo():
         16: "A", 17: "B", 18: "C", 19: "D", 20: "E"
     }
     
-    template_name = "demonstration-gabarito.png"
-    position_file = "demonstration_gabarito_positions.json"
-    
     if not os.path.exists(template_name) or not os.path.exists(position_file):
         print("Please run main.py first to generate the template!")
         return None
@@ -127,7 +121,7 @@ def quick_demo():
                         draw.ellipse([cx-8, cy-8, cx+8, cy+8], fill="black")
                         break
         
-        output_name = "marked_demo.png"
+        output_name = "./templates/marked_demo.png"
         img.save(output_name)
         print(f"Created quick demo: {output_name}")
         return output_name, demo_answers
@@ -137,6 +131,10 @@ def quick_demo():
         return None
 
 if __name__ == "__main__":
+
+    template_name = "./templates/gabarito_demo.png"
+    position_file = "./templates/gabarito_demo_positions.json"
+
     print("Choose mode:")
     print("1. Interactive - Enter your own answers")
     print("2. Quick Demo - Use predefined answers")
@@ -149,11 +147,11 @@ if __name__ == "__main__":
         result = create_marked_demo_sheet()
     
     if result:
-        marked_file, answers = result12
+        marked_file, answers = result
         print(f"\nYou can now grade this sheet by running:")
-        print(f"   python main.py")
+        print(f"   python grade_it.py")
         print(f"\nOr manually grade it with:")
-        print(f"   from main import grade_gabarito_improved, print_grade_report")
+        print(f"   from grade_it import grade_gabarito_improved, print_grade_report")
         print(f"   results = grade_gabarito_improved('{marked_file}', expected_answers, position_data)")
         print(f"   print_grade_report(results)")
     else:
