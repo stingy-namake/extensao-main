@@ -201,7 +201,7 @@ Modify the `generate_gabarito_png_improved` function to adjust:
 - Page dimensions
 - Header/footer content
 
-## 🔄 Workflow Summary
+## Workflow Summary
 
 1. Setup: Install dependencies → Generate template
 2. Preparation: Print template → Students mark answers
