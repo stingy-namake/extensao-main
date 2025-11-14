@@ -180,7 +180,7 @@ Q02: X Student=B    Correct=A (marked: 0.85, correct: 0.12)
 - System will use default fonts if Arial not available
 - Does not affect functionality
 
-## 📝 Customization
+## Customization
 
 ### Adding More Questions
 ```python
