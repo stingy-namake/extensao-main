@@ -41,7 +41,7 @@ class GradingThread(QThread):
 class ModernGradingSystem(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Answer Sheet Grading System")
+        self.setWindowTitle("Sistema de Correção de Gabaritos")
         self.setGeometry(100, 100, 1200, 800)
         self.setStyleSheet(self.get_stylesheet())
         
@@ -237,7 +237,7 @@ class ModernGradingSystem(QMainWindow):
         layout = QVBoxLayout(tab)
         
         # Header
-        header = QLabel("Generate Answer Sheet Template")
+        header = QLabel("Gerar Modelo de Gabarito")
         header.setStyleSheet("font-size: 20px; font-weight: bold; color: #cc0000; margin: 16px;")
         header.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(header)
@@ -251,12 +251,12 @@ class ModernGradingSystem(QMainWindow):
         left_layout = QVBoxLayout(left_panel)
         
         # Settings group
-        settings_group = QGroupBox("Template Settings")
+        settings_group = QGroupBox("Configurações do Modelo")
         settings_layout = QVBoxLayout(settings_group)
         
         # Questions input
         questions_layout = QHBoxLayout()
-        questions_layout.addWidget(QLabel("Number of Questions:"))
+        questions_layout.addWidget(QLabel("Número de Questões:"))
         self.questions_edit = QLineEdit("15")
         questions_layout.addWidget(self.questions_edit)
         questions_layout.addStretch()
@@ -264,20 +264,20 @@ class ModernGradingSystem(QMainWindow):
         
         # Choices input
         choices_layout = QHBoxLayout()
-        choices_layout.addWidget(QLabel("Choices:"))
+        choices_layout.addWidget(QLabel("Alternativas:"))
         self.choices_edit = QLineEdit("A,B,C,D,E")
         choices_layout.addWidget(self.choices_edit)
         choices_layout.addStretch()
         settings_layout.addLayout(choices_layout)
         
         # Generate button
-        self.generate_btn = QPushButton("Generate Template")
+        self.generate_btn = QPushButton("Gerar Modelo")
         self.generate_btn.setProperty("class", "success")
         self.generate_btn.clicked.connect(self.generate_template)
         settings_layout.addWidget(self.generate_btn)
         
         # Status
-        self.template_status = QLabel("Ready to generate template")
+        self.template_status = QLabel("Pronto para gerar modelo")
         self.template_status.setStyleSheet("color: #888; font-style: italic;")
         settings_layout.addWidget(self.template_status)
         
@@ -288,10 +288,10 @@ class ModernGradingSystem(QMainWindow):
         right_panel = QWidget()
         right_layout = QVBoxLayout(right_panel)
         
-        preview_group = QGroupBox("Template Preview")
+        preview_group = QGroupBox("Prévia do Modelo")
         preview_layout = QVBoxLayout(preview_group)
         
-        self.template_preview = QLabel("No template generated yet\n\nClick 'Generate Template' to create one")
+        self.template_preview = QLabel("Nenhum modelo gerado ainda\n\nClique em 'Gerar Modelo' para criar um")
         self.template_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.template_preview.setStyleSheet("color: #888; font-style: italic; padding: 32px;")
         preview_layout.addWidget(self.template_preview)
@@ -302,14 +302,14 @@ class ModernGradingSystem(QMainWindow):
         splitter.addWidget(right_panel)
         splitter.setSizes([400, 600])
         
-        self.tabs.addTab(tab, "Generate Template")
+        self.tabs.addTab(tab, "Gerar Modelo")
 
     def create_marking_tab(self):
         tab = QWidget()
         layout = QVBoxLayout(tab)
         
         # Header
-        header = QLabel("Mark Answer Sheet")
+        header = QLabel("Marcar Gabarito")
         header.setStyleSheet("font-size: 20px; font-weight: bold; color: #cc0000; margin: 16px;")
         header.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(header)
@@ -322,7 +322,7 @@ class ModernGradingSystem(QMainWindow):
         left_panel = QWidget()
         left_layout = QVBoxLayout(left_panel)
         
-        selection_group = QGroupBox("Answer Selection")
+        selection_group = QGroupBox("Seleção de Respostas")
         selection_layout = QVBoxLayout(selection_group)
         
         # Scroll area for questions
@@ -339,16 +339,16 @@ class ModernGradingSystem(QMainWindow):
         
         # Control buttons
         control_layout = QHBoxLayout()
-        self.load_template_btn = QPushButton("Load Template")
+        self.load_template_btn = QPushButton("Carregar Modelo")
         self.load_template_btn.clicked.connect(self.load_template_for_marking)
         control_layout.addWidget(self.load_template_btn)
         
-        self.clear_btn = QPushButton("Clear All")
+        self.clear_btn = QPushButton("Limpar Tudo")
         self.clear_btn.setProperty("class", "warning")
         self.clear_btn.clicked.connect(self.clear_all_answers)
         control_layout.addWidget(self.clear_btn)
         
-        self.create_sheet_btn = QPushButton("Create Marked Sheet")
+        self.create_sheet_btn = QPushButton("Criar Gabarito Marcado")
         self.create_sheet_btn.setProperty("class", "success")
         self.create_sheet_btn.clicked.connect(self.create_marked_sheet_gui)
         control_layout.addWidget(self.create_sheet_btn)
@@ -356,7 +356,7 @@ class ModernGradingSystem(QMainWindow):
         left_layout.addLayout(control_layout)
         
         # Status
-        self.marking_status = QLabel("Load a template to start marking")
+        self.marking_status = QLabel("Carregue um modelo para começar a marcar")
         self.marking_status.setStyleSheet("color: #888; font-style: italic; padding: 8px;")
         left_layout.addWidget(self.marking_status)
         
@@ -364,10 +364,10 @@ class ModernGradingSystem(QMainWindow):
         right_panel = QWidget()
         right_layout = QVBoxLayout(right_panel)
         
-        preview_group = QGroupBox("Template Preview")
+        preview_group = QGroupBox("Prévia do Modelo")
         preview_layout = QVBoxLayout(preview_group)
         
-        self.marking_preview = QLabel("Load template to see preview\n\nClick 'Load Template' to begin")
+        self.marking_preview = QLabel("Carregue o modelo para ver a prévia\n\nClique em 'Carregar Modelo' para começar")
         self.marking_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.marking_preview.setStyleSheet("color: #888; font-style: italic; padding: 32px;")
         preview_layout.addWidget(self.marking_preview)
@@ -378,14 +378,14 @@ class ModernGradingSystem(QMainWindow):
         splitter.addWidget(right_panel)
         splitter.setSizes([500, 500])
         
-        self.tabs.addTab(tab, "Mark Sheet")
+        self.tabs.addTab(tab, "Marcar Gabarito")
 
     def create_grading_tab(self):
         tab = QWidget()
         layout = QVBoxLayout(tab)
         
         # Header
-        header = QLabel("Grade Answer Sheet")
+        header = QLabel("Corrigir Gabarito")
         header.setStyleSheet("font-size: 20px; font-weight: bold; color: #cc0000; margin: 16px;")
         header.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(header)
@@ -399,14 +399,14 @@ class ModernGradingSystem(QMainWindow):
         left_layout = QVBoxLayout(left_panel)
         
         # File selection
-        file_group = QGroupBox("Marked Sheet")
+        file_group = QGroupBox("Gabarito Marcado")
         file_layout = QVBoxLayout(file_group)
         
         file_input_layout = QHBoxLayout()
         self.marked_file_edit = QLineEdit("./templates/marked_demo.png")
         file_input_layout.addWidget(self.marked_file_edit)
         
-        self.browse_btn = QPushButton("Browse")
+        self.browse_btn = QPushButton("Procurar")
         self.browse_btn.clicked.connect(self.browse_marked_file)
         file_input_layout.addWidget(self.browse_btn)
         
@@ -414,11 +414,11 @@ class ModernGradingSystem(QMainWindow):
         left_layout.addWidget(file_group)
         
         # Threshold settings
-        threshold_group = QGroupBox("Detection Settings")
+        threshold_group = QGroupBox("Configurações de Detecção")
         threshold_layout = QVBoxLayout(threshold_group)
         
         threshold_slider_layout = QHBoxLayout()
-        threshold_slider_layout.addWidget(QLabel("Sensitivity:"))
+        threshold_slider_layout.addWidget(QLabel("Sensibilidade:"))
         
         self.threshold_slider = QSlider(Qt.Orientation.Horizontal)
         self.threshold_slider.setMinimum(10)
@@ -431,11 +431,11 @@ class ModernGradingSystem(QMainWindow):
         threshold_slider_layout.addWidget(self.threshold_label)
         
         threshold_layout.addLayout(threshold_slider_layout)
-        threshold_layout.addWidget(QLabel("Lower = more sensitive, Higher = less sensitive"))
+        threshold_layout.addWidget(QLabel("Menor = mais sensível, Maior = menos sensível"))
         left_layout.addWidget(threshold_group)
         
         # Quick answers input
-        answers_group = QGroupBox("Quick Answer Input")
+        answers_group = QGroupBox("Entrada Rápida de Respostas")
         answers_layout = QVBoxLayout(answers_group)
         
         self.answers_edit = QLineEdit("A,B,D,E,E,E,D,B,A,A,C,C,C,D,E,A,E,B,A,E,B,B,C,B,E")
@@ -443,7 +443,7 @@ class ModernGradingSystem(QMainWindow):
         
         apply_layout = QHBoxLayout()
         apply_layout.addStretch()
-        self.apply_btn = QPushButton("Apply to Radio Buttons")
+        self.apply_btn = QPushButton("Aplicar aos Botões de Rádio")
         self.apply_btn.clicked.connect(self.apply_text_answers)
         apply_layout.addWidget(self.apply_btn)
         
@@ -451,13 +451,13 @@ class ModernGradingSystem(QMainWindow):
         left_layout.addWidget(answers_group)
         
         # Grade button
-        self.grade_btn = QPushButton("Grade Sheet")
+        self.grade_btn = QPushButton("Corrigir Gabarito")
         self.grade_btn.setProperty("class", "success")
         self.grade_btn.clicked.connect(self.grade_sheet)
         left_layout.addWidget(self.grade_btn)
         
         # Status
-        self.grading_status = QLabel("Ready to grade")
+        self.grading_status = QLabel("Pronto para corrigir")
         self.grading_status.setStyleSheet("color: #888; font-style: italic; padding: 8px;")
         left_layout.addWidget(self.grading_status)
         
@@ -467,24 +467,24 @@ class ModernGradingSystem(QMainWindow):
         right_panel = QWidget()
         right_layout = QVBoxLayout(right_panel)
         
-        expected_group = QGroupBox("Expected Answers")
+        expected_group = QGroupBox("Respostas Esperadas")
         expected_layout = QVBoxLayout(expected_group)
         
         # Control buttons
         control_layout = QHBoxLayout()
-        self.load_grading_btn = QPushButton("Load Template")
+        self.load_grading_btn = QPushButton("Carregar Modelo")
         self.load_grading_btn.clicked.connect(self.load_template_for_grading)
         control_layout.addWidget(self.load_grading_btn)
         
-        self.set_all_a_btn = QPushButton("A All")
+        self.set_all_a_btn = QPushButton("Todas A")
         self.set_all_a_btn.clicked.connect(lambda: self.set_all_expected_answers("A"))
         control_layout.addWidget(self.set_all_a_btn)
         
-        self.set_all_b_btn = QPushButton("B All")
+        self.set_all_b_btn = QPushButton("Todas B")
         self.set_all_b_btn.clicked.connect(lambda: self.set_all_expected_answers("B"))
         control_layout.addWidget(self.set_all_b_btn)
         
-        self.clear_expected_btn = QPushButton("Clear")
+        self.clear_expected_btn = QPushButton("Limpar")
         self.clear_expected_btn.setProperty("class", "warning")
         self.clear_expected_btn.clicked.connect(self.clear_all_expected_answers)
         control_layout.addWidget(self.clear_expected_btn)
@@ -507,14 +507,14 @@ class ModernGradingSystem(QMainWindow):
         splitter.addWidget(right_panel)
         splitter.setSizes([400, 600])
         
-        self.tabs.addTab(tab, "Grade Sheet")
+        self.tabs.addTab(tab, "Corrigir Gabarito")
 
     def create_results_tab(self):
         tab = QWidget()
         layout = QVBoxLayout(tab)
         
         # Header
-        header = QLabel("Grading Results")
+        header = QLabel("Resultados da Correção")
         header.setStyleSheet("font-size: 20px; font-weight: bold; color: #cc0000; margin: 16px;")
         header.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(header)
@@ -527,7 +527,7 @@ class ModernGradingSystem(QMainWindow):
         left_panel = QWidget()
         left_layout = QVBoxLayout(left_panel)
         
-        results_group = QGroupBox("Detailed Results")
+        results_group = QGroupBox("Resultados Detalhados")
         results_layout = QVBoxLayout(results_group)
         
         self.results_text = QTextEdit()
@@ -540,10 +540,10 @@ class ModernGradingSystem(QMainWindow):
         right_panel = QWidget()
         right_layout = QVBoxLayout(right_panel)
         
-        image_group = QGroupBox("Visualization")
+        image_group = QGroupBox("Visualização")
         image_layout = QVBoxLayout(image_group)
         
-        self.results_image = QLabel("Graded image will appear here\n\nGrade a sheet to see results")
+        self.results_image = QLabel("A imagem corrigida aparecerá aqui\n\nCorrija um gabarito para ver os resultados")
         self.results_image.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.results_image.setStyleSheet("color: #888; font-style: italic; padding: 32px;")
         image_layout.addWidget(self.results_image)
@@ -556,27 +556,27 @@ class ModernGradingSystem(QMainWindow):
         
         # Control buttons
         control_layout = QHBoxLayout()
-        self.clear_results_btn = QPushButton("Clear Results")
+        self.clear_results_btn = QPushButton("Limpar Resultados")
         self.clear_results_btn.setProperty("class", "warning")
         self.clear_results_btn.clicked.connect(self.clear_results)
         control_layout.addWidget(self.clear_results_btn)
         
-        self.save_results_btn = QPushButton("Save Results")
+        self.save_results_btn = QPushButton("Salvar Resultados")
         self.save_results_btn.setProperty("class", "success")
         self.save_results_btn.clicked.connect(self.save_results)
         control_layout.addWidget(self.save_results_btn)
         
-        self.export_btn = QPushButton("Export Report")
+        self.export_btn = QPushButton("Exportar Relatório")
         self.export_btn.clicked.connect(self.export_report)
         control_layout.addWidget(self.export_btn)
         
         layout.addLayout(control_layout)
         
-        self.tabs.addTab(tab, "Results")
+        self.tabs.addTab(tab, "Resultados")
 
     def generate_template(self):
         try:
-            self.template_status.setText("Generating template...")
+            self.template_status.setText("Gerando modelo...")
             
             num_questions = int(self.questions_edit.text())
             choices = tuple(self.choices_edit.text().split(','))
@@ -588,17 +588,17 @@ class ModernGradingSystem(QMainWindow):
                 add_reference_marks=True
             )
             
-            self.template_status.setText("Template generated successfully!")
+            self.template_status.setText("Modelo gerado com sucesso!")
             
             # Display the generated template
             self.display_template_image(template_path)
             
-            QMessageBox.information(self, "Success", 
-                                  f"Template generated successfully!\n\nSaved as: {template_path}")
+            QMessageBox.information(self, "Sucesso", 
+                                  f"Modelo gerado com sucesso!\n\nSalvo como: {template_path}")
             
         except Exception as e:
-            self.template_status.setText("Error generating template")
-            QMessageBox.critical(self, "Error", f"Failed to generate template: {str(e)}")
+            self.template_status.setText("Erro ao gerar modelo")
+            QMessageBox.critical(self, "Erro", f"Falha ao gerar modelo: {str(e)}")
 
     def display_template_image(self, image_path):
         try:
@@ -609,7 +609,7 @@ class ModernGradingSystem(QMainWindow):
                 self.template_preview.setPixmap(scaled_pixmap)
                 self.template_preview.setText("")
         except Exception as e:
-            self.template_preview.setText(f"Error loading image: {str(e)}")
+            self.template_preview.setText(f"Erro ao carregar imagem: {str(e)}")
 
     def load_template_for_marking(self):
         try:
@@ -617,7 +617,7 @@ class ModernGradingSystem(QMainWindow):
             position_file = "./templates/gabarito_demo_positions.json"
             
             if not os.path.exists(template_path) or not os.path.exists(position_file):
-                QMessageBox.critical(self, "Error", "Template not found. Please generate a template first.")
+                QMessageBox.critical(self, "Erro", "Modelo não encontrado. Por favor, gere um modelo primeiro.")
                 return
             
             # Load position data
@@ -634,7 +634,7 @@ class ModernGradingSystem(QMainWindow):
             
             # Create header
             header_layout = QHBoxLayout()
-            header_layout.addWidget(QLabel("Question"))
+            header_layout.addWidget(QLabel("Questão"))
             
             choices = self.position_data.get('choices', ['A', 'B', 'C', 'D', 'E'])
             for choice in choices:
@@ -673,11 +673,11 @@ class ModernGradingSystem(QMainWindow):
             # Display template image
             self.display_marking_preview(template_path)
             
-            self.marking_status.setText("Template loaded. Select answers using the radio buttons.")
+            self.marking_status.setText("Modelo carregado. Selecione as respostas usando os botões de rádio.")
             
         except Exception as e:
-            self.marking_status.setText("Error loading template")
-            QMessageBox.critical(self, "Error", f"Failed to load template: {str(e)}")
+            self.marking_status.setText("Erro ao carregar modelo")
+            QMessageBox.critical(self, "Erro", f"Falha ao carregar modelo: {str(e)}")
 
     def display_marking_preview(self, image_path):
         try:
@@ -688,13 +688,13 @@ class ModernGradingSystem(QMainWindow):
                 self.marking_preview.setPixmap(scaled_pixmap)
                 self.marking_preview.setText("")
         except Exception as e:
-            self.marking_preview.setText(f"Error loading image: {str(e)}")
+            self.marking_preview.setText(f"Erro ao carregar imagem: {str(e)}")
 
     def on_answer_selected(self, checked):
         if checked:
             radio = self.sender()
             if hasattr(radio, 'question_num') and hasattr(radio, 'choice_value'):
-                self.marking_status.setText(f"Q{radio.question_num}: {radio.choice_value} selected")
+                self.marking_status.setText(f"Q{radio.question_num}: {radio.choice_value} selecionada")
 
     def clear_all_answers(self):
         for q_num, button_group in self.question_vars:
@@ -702,12 +702,12 @@ class ModernGradingSystem(QMainWindow):
             for button in button_group.buttons():
                 button.setChecked(False)
             button_group.setExclusive(True)
-        self.marking_status.setText("All answers cleared")
+        self.marking_status.setText("Todas as respostas foram limpas")
 
     def create_marked_sheet_gui(self):
         try:
             if not hasattr(self, 'position_data'):
-                QMessageBox.critical(self, "Error", "Please load a template first.")
+                QMessageBox.critical(self, "Erro", "Por favor, carregue um modelo primeiro.")
                 return
             
             # Collect answers from radio buttons
@@ -718,32 +718,32 @@ class ModernGradingSystem(QMainWindow):
                     answers[q_num] = checked_button.choice_value
             
             if not answers:
-                QMessageBox.warning(self, "Warning", "No answers selected. Please select at least one answer.")
+                QMessageBox.warning(self, "Aviso", "Nenhuma resposta selecionada. Por favor, selecione pelo menos uma resposta.")
                 return
             
             # Create marked sheet
             template_path = "./templates/gabarito_demo.png"
-            output_path = "my_marked_sheet.png"
+            output_path = "meu_gabarito_marcado.png"
             
             marked_file = testing_mark_gabarito.create_marked_sheet_from_answers(
                 answers, template_path, self.position_data, output_path
             )
             
-            self.marking_status.setText(f"Marked sheet created: {marked_file}")
+            self.marking_status.setText(f"Gabarito marcado criado: {marked_file}")
             
             # Update grading tab with the new file
             self.marked_file_edit.setText(marked_file)
             
-            QMessageBox.information(self, "Success", 
-                                  f"Marked sheet created!\n\nSaved as: {marked_file}\n\nYou can now grade it in the 'Grade Sheet' tab.")
+            QMessageBox.information(self, "Sucesso", 
+                                  f"Gabarito marcado criado!\n\nSalvo como: {marked_file}\n\nAgora você pode corrigi-lo na aba 'Corrigir Gabarito'.")
             
         except Exception as e:
-            self.marking_status.setText("Error creating marked sheet")
-            QMessageBox.critical(self, "Error", f"Failed to create marked sheet: {str(e)}")
+            self.marking_status.setText("Erro ao criar gabarito marcado")
+            QMessageBox.critical(self, "Erro", f"Falha ao criar gabarito marcado: {str(e)}")
 
     def browse_marked_file(self):
         filename, _ = QFileDialog.getOpenFileName(
-            self, "Select Marked Answer Sheet", "", "PNG Files (*.png);;All Files (*)"
+            self, "Selecionar Gabarito Marcado", "", "PNG Files (*.png);;All Files (*)"
         )
         if filename:
             self.marked_file_edit.setText(filename)
@@ -757,7 +757,7 @@ class ModernGradingSystem(QMainWindow):
             position_file = "./templates/gabarito_demo_positions.json"
             
             if not os.path.exists(position_file):
-                QMessageBox.critical(self, "Error", "Template not found. Please generate a template first.")
+                QMessageBox.critical(self, "Erro", "Modelo não encontrado. Por favor, gere um modelo primeiro.")
                 return
             
             # Load position data
@@ -774,7 +774,7 @@ class ModernGradingSystem(QMainWindow):
             
             # Create header
             header_layout = QHBoxLayout()
-            header_layout.addWidget(QLabel("Question"))
+            header_layout.addWidget(QLabel("Questão"))
             
             choices = self.grading_position_data.get('choices', ['A', 'B', 'C', 'D', 'E'])
             for choice in choices:
@@ -812,11 +812,11 @@ class ModernGradingSystem(QMainWindow):
             # Load current answers from text field
             self.apply_text_answers()
             
-            self.grading_status.setText("Template loaded. Set expected answers using radio buttons.")
+            self.grading_status.setText("Modelo carregado. Defina as respostas esperadas usando os botões de rádio.")
             
         except Exception as e:
-            self.grading_status.setText("Error loading template")
-            QMessageBox.critical(self, "Error", f"Failed to load template: {str(e)}")
+            self.grading_status.setText("Erro ao carregar modelo")
+            QMessageBox.critical(self, "Erro", f"Falha ao carregar modelo: {str(e)}")
 
     def on_expected_answer_selected(self, checked):
         if checked:
@@ -857,7 +857,7 @@ class ModernGradingSystem(QMainWindow):
                         button.setChecked(True)
                         break
             self.update_answers_text_field()
-            self.grading_status.setText(f"All expected answers set to {choice}")
+            self.grading_status.setText(f"Todas as respostas esperadas definidas como {choice}")
 
     def clear_all_expected_answers(self):
         if hasattr(self, 'expected_answer_vars'):
@@ -867,11 +867,11 @@ class ModernGradingSystem(QMainWindow):
                     button.setChecked(False)
                 button_group.setExclusive(True)
             self.update_answers_text_field()
-            self.grading_status.setText("All expected answers cleared")
+            self.grading_status.setText("Todas as respostas esperadas foram limpas")
 
     def grade_sheet(self):
         try:
-            self.grading_status.setText("Grading sheet...")
+            self.grading_status.setText("Corrigindo gabarito...")
             self.grade_btn.setEnabled(False)
             
             # Load position data
@@ -895,44 +895,44 @@ class ModernGradingSystem(QMainWindow):
             self.grading_thread.start()
             
         except Exception as e:
-            self.grading_status.setText("Error starting grading")
-            QMessageBox.critical(self, "Error", f"Failed to start grading: {str(e)}")
+            self.grading_status.setText("Erro ao iniciar correção")
+            QMessageBox.critical(self, "Erro", f"Falha ao iniciar correção: {str(e)}")
             self.grade_btn.setEnabled(True)
 
     def on_grading_finished(self, results):
         self.current_results = results
         self.display_results(results)
         self.create_visualization(results)
-        self.grading_status.setText("Grading completed")
+        self.grading_status.setText("Correção concluída")
         self.grade_btn.setEnabled(True)
         self.tabs.setCurrentIndex(3)  # Switch to results tab
 
     def on_grading_error(self, error_msg):
-        self.grading_status.setText("Error grading sheet")
-        QMessageBox.critical(self, "Error", f"Failed to grade sheet: {error_msg}")
+        self.grading_status.setText("Erro ao corrigir gabarito")
+        QMessageBox.critical(self, "Erro", f"Falha ao corrigir gabarito: {error_msg}")
         self.grade_btn.setEnabled(True)
 
     def display_results(self, results):
-        text = "GRADE REPORT\n"
+        text = "RELATÓRIO DE CORREÇÃO\n"
         text += "=" * 40 + "\n"
-        text += f"Score: {results['total_score']}/{results['max_score']}\n"
-        text += f"Percentage: {results['percentage']:.1f}%\n"
-        text += f"Multiple answers: {results['multiple_answers']}\n"
-        text += f"Unanswered: {results['unanswered']}\n\n"
+        text += f"Pontuação: {results['total_score']}/{results['max_score']}\n"
+        text += f"Porcentagem: {results['percentage']:.1f}%\n"
+        text += f"Múltiplas respostas: {results['multiple_answers']}\n"
+        text += f"Não respondidas: {results['unanswered']}\n\n"
         
-        text += "DETAILED RESULTS\n"
+        text += "RESULTADOS DETALHADOS\n"
         text += "=" * 40 + "\n"
         for item in results['question_results']:
-            status = "CORRECT" if item['is_correct'] else "WRONG"
+            status = "CORRETO" if item['is_correct'] else "ERRADO"
             if item['student_answer'] in ['MULTI', 'NONE']:
-                status = "MULTI/NONE"
+                status = "MÚLTIPLA/NENHUMA"
             
-            line = f"Q{item['question']:02d}: {status:10} Student={item['student_answer']:5} Correct={item['correct_answer']}"
+            line = f"Q{item['question']:02d}: {status:15} Aluno={item['student_answer']:5} Correto={item['correct_answer']}"
             
             if not item['is_correct'] and item['student_answer'] not in ['MULTI', 'NONE']:
                 marked_ratio = item['bubble_status'][item['student_answer']]
                 correct_ratio = item['bubble_status'][item['correct_answer']]
-                line += f" (marked: {marked_ratio:.2f}, correct: {correct_ratio:.2f})"
+                line += f" (marcado: {marked_ratio:.2f}, correto: {correct_ratio:.2f})"
             
             text += line + "\n"
         
@@ -995,31 +995,31 @@ class ModernGradingSystem(QMainWindow):
                 pass
                 
         except Exception as e:
-            self.results_image.setText(f"Error creating visualization: {str(e)}")
+            self.results_image.setText(f"Erro ao criar visualização: {str(e)}")
 
     def clear_results(self):
         self.results_text.clear()
-        self.results_image.setText("Graded image will appear here\n\nGrade a sheet to see results")
+        self.results_image.setText("A imagem corrigida aparecerá aqui\n\nCorrija um gabarito para ver os resultados")
         self.current_results = None
 
     def save_results(self):
         if not self.current_results:
-            QMessageBox.warning(self, "Warning", "No results to save. Please grade a sheet first.")
+            QMessageBox.warning(self, "Aviso", "Nenhum resultado para salvar. Por favor, corrija um gabarito primeiro.")
             return
             
         filename, _ = QFileDialog.getSaveFileName(
-            self, "Save Results", "", "Text Files (*.txt);;All Files (*)"
+            self, "Salvar Resultados", "", "Arquivos de Texto (*.txt);;Todos os Arquivos (*)"
         )
         if filename:
             try:
                 with open(filename, 'w') as f:
                     f.write(self.results_text.toPlainText())
-                QMessageBox.information(self, "Success", f"Results saved to: {filename}")
+                QMessageBox.information(self, "Sucesso", f"Resultados salvos em: {filename}")
             except Exception as e:
-                QMessageBox.critical(self, "Error", f"Failed to save results: {str(e)}")
+                QMessageBox.critical(self, "Erro", f"Falha ao salvar resultados: {str(e)}")
 
     def export_report(self):
-        QMessageBox.information(self, "Info", "Export feature would generate a PDF report with charts and analysis.")
+        QMessageBox.information(self, "Informação", "O recurso de exportação geraria um relatório PDF com gráficos e análise.")
 
 def main():
     # Check if templates directory exists
@@ -1027,10 +1027,10 @@ def main():
         os.makedirs("templates")
     
     app = QApplication(sys.argv)
-    app.setApplicationName("Answer Sheet Grading System")
+    app.setApplicationName("Sistema de Correção de Gabaritos")
     
     # Set monospaced font for the entire application
-    font = QFont("Consolas", 12)
+    font = QFont("Consolas", 9)
     app.setFont(font)
     
     window = ModernGradingSystem()
